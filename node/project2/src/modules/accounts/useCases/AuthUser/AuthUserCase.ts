@@ -39,7 +39,7 @@ class AuthUserCase {
       subject: user.id,
       expiresIn: "1d",
     });
-    return { user, token };
+    return { user: { name: user.name, email: user.email }, token };
   }
 }
 
