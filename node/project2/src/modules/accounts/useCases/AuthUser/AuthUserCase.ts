@@ -35,7 +35,7 @@ class AuthUserCase {
       throw new Error("Email or password incorrect!");
     }
 
-    const token = sign({}, "d5fda2795a52eda135e4752fc07cac4b", {
+    const token = sign({}, process.env.AUTH_TOKEN, {
       subject: user.id,
       expiresIn: "1d",
     });
