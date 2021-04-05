@@ -30,6 +30,10 @@ export async function ensureAuth(
     if (!user) {
       throw new AppError("user does not exists!", 401);
     }
+
+    req.user = {
+      id: user_id,
+    };
     next();
   } catch (err) {
     throw new AppError("Invalid token!", 401);
