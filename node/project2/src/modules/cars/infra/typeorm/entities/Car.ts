@@ -12,7 +12,7 @@ import { Category } from "./Category";
 
 @Entity("cars")
 class Car {
-  @PrimaryColumn()
+  @PrimaryColumn({ name: "id" })
   id?: string;
 
   @Column()
@@ -49,8 +49,8 @@ class Car {
   constructor() {
     if (!this.id) {
       this.id = uuidV4();
-      this.available = true;
     }
+    this.available = true;
   }
 }
 
