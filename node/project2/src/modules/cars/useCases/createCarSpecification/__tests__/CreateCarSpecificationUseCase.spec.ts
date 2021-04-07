@@ -1,15 +1,19 @@
 import { CarRepositoryFake } from "@modules/cars/repositories/fake/CarRepositoryFake";
+import { SpecificationReposiroryFake } from "@modules/cars/repositories/fake/SpecificationRepositoryFake";
 import { AppError } from "@shared/errors/AppError";
 
 import { CreateCarSpecificationUseCase } from "../CreateCarSpecificationUseCase";
 
 let createCarSpecificationUseCase: CreateCarSpecificationUseCase;
 let carsRepositoryFake: CarRepositoryFake;
+let specificationRepositoryFake: SpecificationReposiroryFake;
 describe("Create Car Specification", () => {
   beforeEach(() => {
     carsRepositoryFake = new CarRepositoryFake();
+    specificationRepositoryFake = new SpecificationReposiroryFake();
     createCarSpecificationUseCase = new CreateCarSpecificationUseCase(
-      carsRepositoryFake
+      carsRepositoryFake,
+      specificationRepositoryFake
     );
   });
 
@@ -36,10 +40,23 @@ describe("Create Car Specification", () => {
       name: "Civic",
     });
 
-    const specifications_id = ["1234"];
-    await createCarSpecificationUseCase.execute({
+    const specification = await specificationRepositoryFake.create({
+      description: "test",
+      name: "test",
+    });
+
+    const specifications_id = [specification.id];
+    const specificationsCars = await createCarSpecificationUseCase.execute({
       car_id: car.id,
       specifications_id,
     });
+
+    expect(specificationsCars).toHaveProperty("specifications");
+    expect(specificationsCars.specifications.length).toBe(1);
+    expect(specificationsCars.specifications).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ description: "test", name: "test" }),
+      ])
+    );
   });
 });

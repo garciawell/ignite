@@ -14,13 +14,17 @@ class SpecificationRepository implements ISpecificationRepository {
     this.repository = getRepository(Specification);
   }
 
-  async create({ name, description }: ICreateSpecificationDTO): Promise<void> {
+  async create({
+    name,
+    description,
+  }: ICreateSpecificationDTO): Promise<Specification> {
     const specification = this.repository.create({
       description,
       name,
     });
 
-    await this.repository.save(specification);
+    const spec = await this.repository.save(specification);
+    return spec;
   }
 
   async findByName({ name }: { name: string }): Promise<Specification> {
@@ -30,6 +34,11 @@ class SpecificationRepository implements ISpecificationRepository {
       },
     });
 
+    return Specification;
+  }
+
+  async findByIds(ids: string[]): Promise<Specification[]> {
+    const Specification = await this.repository.findByIds(ids);
     return Specification;
   }
 }
